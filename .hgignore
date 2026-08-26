@@ -1,0 +1,9 @@
+syntax: glob
+**/__pycache__/
+**/*.pyc
+.venv/
+venv/
+tmp*
+.git/
+
+.pytest_cache/

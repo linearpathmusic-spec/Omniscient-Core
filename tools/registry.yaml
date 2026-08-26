@@ -1,0 +1,92 @@
+---
+name: Super Brain Tools
+version: 2.0
+---
+tools:
+  - name: brain_query
+    description: |
+      Search persistent Super Brain knowledge.
+      Use when the task may depend on previously learned concepts,
+      project knowledge, prior decisions, historical experience,
+      procedures, or known tool capabilities.
+    parameters:
+      query:
+        type: string
+        description: Natural-language search query
+      top_k:
+        type: integer
+        description: Optional result count (default 5)
+      project:
+        type: string
+        description: Optional project scope
+    returns: JSON with ranked results
+
+  - name: brain_ingest
+    description: |
+      Preserve an immutable raw source in the Brain.
+      Use when the owner provides a file (md/txt/json/yaml) that should
+      serve as evidence for future knowledge. Content-derived source ID
+      (SRC-{sha256[:12]}); identical bytes deduplicate to 'existing'.
+    parameters:
+      source_path:
+        type: string
+        description: Path to the source file
+      project:
+        type: string
+        description: Optional project scope
+    returns: JSON with status (created|existing), source_id, sha256, path
+
+  - name: brain_write
+    description: |
+      Safely write one knowledge document under knowledge/.
+      Use after brain_query determines CREATE vs UPDATE. Content must be
+      full markdown with frontmatter (title, kind, source_refs, status).
+      UPDATE requires expected_sha256 for optimistic concurrency.
+      Only knowledge/**/*.md is writable; every write cites real sources;
+      autonomous writes are always status: provisional. Verified knowledge
+      is content-locked (dispute via brain_review first); writing a
+      disputed page auto-resets it to provisional.
+    parameters:
+      op:
+        type: string
+        description: create or update
+      path:
+        type: string
+        description: Repo-relative target, e.g. knowledge/concepts/rag.md
+      content:
+        type: string
+        description: Full markdown with YAML frontmatter
+      expected_sha256:
+        type: string
+        description: Required for update (SHA when read)
+    returns: JSON with status (created|updated|rejected), hashes, or error code
+
+  - name: brain_review
+    description: |
+      Govern the epistemic lifecycle of one knowledge document.
+      Changes status only — never content or provenance. Three states:
+      provisional (default), verified, disputed. Legal transitions:
+      provisional->verified, provisional->disputed, verified->disputed.
+      Requires expected_sha256 (stale-review protection), at least one
+      SRC-* evidence ref that exists with an intact hash, and a concise
+      rationale. Verified knowledge is content-locked: dispute it, then
+      brain_write corrected content (auto-resets to provisional), then
+      verify again. Not owner-gated — Pi decides after reading the page
+      and its evidence; runtime enforces integrity.
+    parameters:
+      decision:
+        type: string
+        description: verify or dispute
+      path:
+        type: string
+        description: Repo-relative target, e.g. knowledge/concepts/rag.md
+      expected_sha256:
+        type: string
+        description: SHA-256 of the page when read
+      evidence_refs:
+        type: array
+        description: SRC-* evidence IDs (must exist, hashes intact)
+      rationale:
+        type: string
+        description: Concise review rationale (logged)
+    returns: JSON with status (verified|disputed|rejected), review_id, hashes, or error code

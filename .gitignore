@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Tooling / caches
+.pytest_cache/
+.pytype/
+mypy_cache/
+.ruff_cache/
+
+# Pi
+.pi/
+
+# Mercurial (primary VCS; git is the public mirror)
+.hg/
+
+# Scratch / scratch artifacts
+tmp*
+*.pdf
+
+# Backups (durable, but never push snapshots to the public mirror)
+backups/
+
+# Runtime artifacts (lock files, query/write logs) — never push to the public mirror
+.locks/
+logs/
+
+# Personal knowledge — do not push (users build their own)
+history/
+evals/
+state/
+# Synthesized knowledge pages
+knowledge/
+# Third-party source copies (copyright) — recreate on ingest
+raw/

@@ -1,0 +1,8 @@
+# Super Brain — Knowledge Curriculum
+# Human-readable checklist. Not a Brain database.
+# Process sequentially. Later sources integrate with earlier ones.
+#
+# This repo ships with an EMPTY curriculum: every user builds their own
+# knowledge library. Add your batches here as you ingest sources.
+
+collections: {}

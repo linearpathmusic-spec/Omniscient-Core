@@ -1,0 +1,25 @@
+[project]
+name = "super-brain"
+version = "1.0.0"
+description = "Persistent external cognitive system for Pi — knowledge, experience, and procedures"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+pdf = [
+    "pypdf>=4.0",
+    "pdfminer.six>=20221105",
+]
+# OCR fallback additionally needs system packages:
+#   poppler-utils (pdftoppm) and tesseract-ocr
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "evals"]
+
+[tool.setuptools]
+packages = ["brain", "brain.runtime"]

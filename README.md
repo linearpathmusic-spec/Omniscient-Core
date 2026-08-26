@@ -1,9 +1,9 @@
-# Omniscient-Core
+# Omniscient-Core #
 
-A persistent "brain" for an AI agent — small and stable on the outside,
+A persistent "brain" for an AI agent (such as Pi agent) — small and stable on the outside,
 honest about what it doesn't know on the inside.
 
-## Where the idea came from
+## Where the idea came from ##
 
 Andrej Karpathy put out a simple idea a while back: instead of constantly
 re-writing code, an AI should build a *brain* — ingest the sources it cares
@@ -18,7 +18,7 @@ with one obsession: the system has to tell the difference between something
 it actually has evidence for and something it's just confident about. Most
 retrieval setups hide that behind a fake "trust score." This one doesn't.
 
-## What it actually is
+## What it actually is ##
 
 A set of six functions that an agent calls, backed by real modules:
 
@@ -35,7 +35,7 @@ Everything the agent retrieves goes through `brain_query`. That interface
 hasn't changed since the first version, even though the search engine behind
 it went from flat lexical scoring to Okapi BM25.
 
-## The honest part — epistemic states
+## The honest part — epistemic states ##
 
 Every knowledge page is in one of three states, and the transitions are
 enforced, not suggested:
@@ -49,7 +49,7 @@ You can't fudge `provisional → verified` without a real source ref, and
 write the correction (which drops it back to provisional) and review it again.
 No silent self-modification, no confidence scores pretending to be certainty.
 
-## How it's built
+## How it's built ##
 
 ```
 brain/          governance (constitution, policies) + the six runtime modules
@@ -66,7 +66,7 @@ The design principle that shows up everywhere: **small API, deep modules.**
 Each capability was added as one function and one module, and the surface the
 agent sees never grew fat.
 
-## Bring your own knowledge
+## Bring your own knowledge ##
 
 The repo ships as a working program with an **empty** knowledge library:
 `knowledge/` contains only the empty category tree, and `raw/` starts empty.
@@ -75,7 +75,7 @@ with the same loop the design intends: `brain_ingest` locks a source in as
 immutable evidence, `brain_write` creates source-backed pages under
 `knowledge/`, `brain_review` moves pages between epistemic states.
 
-## Running it
+## Running it ##
 
 ```bash
 pip install -e .            # needs Python 3.11+ and PyYAML
@@ -90,7 +90,7 @@ python3 tools/brain_review.py  verify --path knowledge/ai/rag.md --expected-sha 
 
 Tests run in isolated temp roots, so they never touch your live corpus.
 
-## Security
+## Security ##
 
 - **Write boundary** — `brain_write` and `brain_review` only ever touch
   `knowledge/**/*.md`. Path traversal, absolute paths, and escaping symlinks
@@ -105,6 +105,6 @@ Tests run in isolated temp roots, so they never touch your live corpus.
   Markdown-only and owner-approved. Logs record hashes and paths, never
   document content.
 
-## License
+## License ##
 
 MIT — see [LICENSE](LICENSE).
